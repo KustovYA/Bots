@@ -9,8 +9,8 @@ public class ResourceSpawner : MonoBehaviour
     [SerializeField] protected int _poolMaxSize = 50;
 
     private ObjectPool<Resource> _pool;
-    private float _positionX = 34f;
-    private float _positionZ = 17f;
+    private float _positionX = 30f;
+    private float _positionZ = 15f;
     private float _positionY = 9f;
 
     private void Awake()

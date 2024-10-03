@@ -1,20 +1,38 @@
-using TMPro;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class ResourceCounter : MonoBehaviour
-{
-    [SerializeField] private ResourceCollector _collector;
-    [SerializeField] private TextMeshProUGUI _text;
+{    
+   [SerializeField] private Bot[] _bots;
+
+    public event UnityAction OnAmountRaised;
 
     private int _counter = 0;
 
-    private void Update()
+   private void OnEnable()
     {
-        _text.text = "Ресусов собрано: " + _counter.ToString();
+        foreach(Bot bot in _bots)
+        {
+            bot.OnCounterAdded += AddCount;
+        }        
     }
+
+    private void OnDisable()
+    {
+        foreach (Bot bot in _bots)
+        {
+            bot.OnCounterAdded -= AddCount;
+        }        
+    }
+
+    public int ShowCount()
+    {
+        return _counter;
+    }      
 
     public void AddCount()
     {
         _counter++;
+        OnAmountRaised?.Invoke();
     }
 }
