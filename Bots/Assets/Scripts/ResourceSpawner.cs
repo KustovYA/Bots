@@ -1,17 +1,30 @@
 using UnityEngine.Pool;
 using UnityEngine;
+using System.Collections;
 
 public class ResourceSpawner : MonoBehaviour
 {
-    [SerializeField] protected Resource _resource;
-    [SerializeField] private float _repeatRate = 3f;
-    [SerializeField] protected int _poolCapacity = 10;
+    [SerializeField] private Resource _resource;
+    [SerializeField] private float _repeatRate = 2f;
+    [SerializeField] private int _poolCapacity = 10;
     [SerializeField] protected int _poolMaxSize = 50;
+    [SerializeField] private BaseCollector _baseCollector;
 
     private ObjectPool<Resource> _pool;
     private float _positionX = 30f;
     private float _positionZ = 15f;
     private float _positionY = 9f;
+    private float _baseRadius = 5f;
+
+    private void OnEnable()
+    {
+        _baseCollector.ResourceDelivered += ReturnCubeToPool;
+    }
+
+    private void OnDisable()
+    {
+        _baseCollector.ResourceDelivered -= ReturnCubeToPool;
+    }
 
     private void Awake()
     {
@@ -19,11 +32,11 @@ public class ResourceSpawner : MonoBehaviour
     }
 
     private void Start()
-    {
-        InvokeRepeating(nameof(GetCube), 0.0f, _repeatRate);
+    {        
+        StartCoroutine(GetCubeRepeating());
     }
 
-    private void GetCube()
+    private void GetResource()
     {
         _pool.Get();
     }
@@ -42,8 +55,16 @@ public class ResourceSpawner : MonoBehaviour
     }
 
     private void OnTakeFromPool(Resource instance) 
-    {        
-        instance.transform.position = new Vector3(Random.Range(-_positionX, _positionX), _positionY, Random.Range(-_positionZ, _positionZ));        
+    {
+        Vector3 randomPosition;
+
+        do
+        {
+            randomPosition = new Vector3(Random.Range(-_positionX, _positionX), _positionY, Random.Range(-_positionZ, _positionZ));
+        }
+        while (IsInCircle(randomPosition));
+
+        instance.transform.position = randomPosition;            
         instance.gameObject.SetActive(true);
     }
 
@@ -55,5 +76,25 @@ public class ResourceSpawner : MonoBehaviour
     private void OnDestroyObject(Resource instance) 
     {
         Destroy(instance.gameObject);
+    }
+
+    private bool IsInCircle(Vector3 position)
+    {
+        float centerX = 0f;
+        float centerZ = 0f;
+
+        float distance = Mathf.Sqrt(Mathf.Pow(position.x - centerX, 2) + Mathf.Pow(position.z - centerZ, 2));
+        return distance < _baseRadius;
+    }
+
+    private IEnumerator GetCubeRepeating() 
+    {
+        var wait = new WaitForSeconds(_repeatRate);
+
+        while (true)
+        {
+            GetResource();
+            yield return wait;
+        }       
     }
 }

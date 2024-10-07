@@ -1,10 +1,11 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
 public class Scaner: MonoBehaviour
 {
-    [SerializeField] protected Resource _resource;
+    [SerializeField] private Resource _resource;
     [SerializeField] private float _repeatScanRate = 2f;
     [SerializeField] protected float _scanRadius = 400f;
 
@@ -12,22 +13,19 @@ public class Scaner: MonoBehaviour
     private List<Resource> _busyResources = new List<Resource>();
     private float _currentTime;    
 
-    public event UnityAction OnResourceFounded;
+    public event UnityAction ResourceFounded;
 
     private void Update()
-    {
-        _currentTime += Time.deltaTime;
-
-        if ( _currentTime > _repeatScanRate)
-        {            
-            Scan();
-            _currentTime = 0;            
-        }
+    {        
+        StartCoroutine(PerformScan());
     }
 
     public Resource GetResource()
     {
-        return _freeResources[0];
+        if(_freeResources.Count > 0)
+            return _freeResources[0];
+        else
+            return null;
     }
 
     public void RemoveResourceFromList(Resource currentResource)
@@ -47,9 +45,16 @@ public class Scaner: MonoBehaviour
                 if(resource != null && !_freeResources.Contains(resource) && !_busyResources.Contains(resource))
                 {
                     _freeResources.Add(resource);                    
-                    OnResourceFounded?.Invoke();                  
+                    ResourceFounded?.Invoke();                  
                 }
             }           
         }        
-    }         
+    }    
+    
+    private IEnumerator PerformScan()
+    {
+        var wait = new WaitForSeconds(_repeatScanRate);
+        Scan();
+        yield return wait;        
+    }
 }

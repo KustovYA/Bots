@@ -8,16 +8,16 @@ public class CounterShower : MonoBehaviour
 
     private void OnEnable()
     {
-        _counter.OnAmountRaised += ShowCounter;
+        _counter.AmountRaised += Display;
     }
 
     private void OnDisable()
     {
-        _counter.OnAmountRaised -= ShowCounter;
+        _counter.AmountRaised -= Display;
     }
 
-    private void ShowCounter()
+    private void Display()
     {
-        _text.text = "Ресусов собрано: " + _counter.ShowCount().ToString();
+        _text.text = "Ресусов собрано: " + _counter.GetCount().ToString();
     }        
 }

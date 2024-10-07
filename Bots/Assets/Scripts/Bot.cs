@@ -8,8 +8,14 @@ public class Bot : MonoBehaviour
        
     private Resource _resource = null;   
 
-    public event UnityAction OnCounterAdded;       
+    public event UnityAction CounterAdded;
 
+    public void CollectResource(Resource resource)
+    {
+        _botMover.Move(resource.transform.position);
+        _resource = resource;
+    }
+    
     private void OnTriggerEnter(Collider other)
     {      
         if (other.GetComponent<Resource>() == _resource && _resource != null)       
@@ -25,14 +31,8 @@ public class Bot : MonoBehaviour
                 print("—бросил ресурс");
                 _resource.transform.SetParent(null);                
                 _resource = null;
-                OnCounterAdded?.Invoke();
+                CounterAdded?.Invoke();
             }                  
         }
-    }
-
-    public void CollectResource(Resource resource)
-    {        
-        _botMover.Move(resource.transform.position);  
-        _resource = resource;              
-    }   
+    }     
     }
