@@ -4,14 +4,12 @@ using UnityEngine;
 using UnityEngine.Events;
 
 public class Scaner: MonoBehaviour
-{
-    [SerializeField] private Resource _resource;
+{    
     [SerializeField] private float _repeatScanRate = 2f;
-    [SerializeField] protected float _scanRadius = 400f;
+    [SerializeField] private float _scanRadius = 400f;
 
     private List<Resource> _freeResources = new List<Resource>();
-    private List<Resource> _busyResources = new List<Resource>();
-    private float _currentTime;    
+    private List<Resource> _busyResources = new List<Resource>();      
 
     public event UnityAction ResourceFounded;
 
@@ -42,13 +40,15 @@ public class Scaner: MonoBehaviour
         {        
             if (scannedObject.TryGetComponent<Resource>(out Resource resource))
             {
-                if(resource != null && !_freeResources.Contains(resource) && !_busyResources.Contains(resource))
+                if(!_freeResources.Contains(resource) && !_busyResources.Contains(resource))
                 {
-                    _freeResources.Add(resource);                    
-                    ResourceFounded?.Invoke();                  
-                }
+                    _freeResources.Add(resource);                                              
+                }                
             }           
-        }        
+        }
+
+        if (_freeResources.Count > 0)
+            ResourceFounded?.Invoke();
     }    
     
     private IEnumerator PerformScan()

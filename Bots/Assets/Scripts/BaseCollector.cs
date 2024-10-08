@@ -6,8 +6,7 @@ using UnityEngine.Events;
 public class BaseCollector : MonoBehaviour
 {
     [SerializeField] private Scaner _scaner;
-    [SerializeField] private List<Bot> _freeBot;
-    [SerializeField] private ResourceSpawner _resourceSpawner;
+    [SerializeField] private List<Bot> _freeBot;    
     [SerializeField] private ResourceCounter _resourceCounter;
 
     private List<Bot> _busyBot = new List<Bot>();
@@ -35,7 +34,7 @@ public class BaseCollector : MonoBehaviour
         {
             bot.CounterAdded -= _resourceCounter.AddCount;
         }
-    }
+    }   
 
     public void SendBot()
     {
