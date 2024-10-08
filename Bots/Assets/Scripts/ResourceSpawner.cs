@@ -7,7 +7,7 @@ public class ResourceSpawner : MonoBehaviour
     [SerializeField] private Resource _resource;
     [SerializeField] private float _repeatRate = 2f;
     [SerializeField] private int _poolCapacity = 10;
-    [SerializeField] protected int _poolMaxSize = 50;
+    [SerializeField] private int _poolMaxSize = 50;
     [SerializeField] private BaseCollector _baseCollector;
 
     private ObjectPool<Resource> _pool;
