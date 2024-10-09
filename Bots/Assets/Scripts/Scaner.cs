@@ -9,13 +9,19 @@ public class Scaner: MonoBehaviour
     [SerializeField] private float _scanRadius = 400f;
 
     private List<Resource> _freeResources = new List<Resource>();
-    private List<Resource> _busyResources = new List<Resource>();      
+    private List<Resource> _busyResources = new List<Resource>();
+    private WaitForSeconds _wait;
 
     public event UnityAction ResourceFounded;
 
-    private void Update()
+    private void Awake()
+    {
+        _wait = new WaitForSeconds(_repeatScanRate);
+    }
+
+    private void Start()
     {        
-        StartCoroutine(PerformScan());
+        StartCoroutine(PerformScan(_wait));
     }
 
     public Resource GetResource()
@@ -39,22 +45,27 @@ public class Scaner: MonoBehaviour
         foreach (Collider scannedObject in scannedObjects) 
         {        
             if (scannedObject.TryGetComponent<Resource>(out Resource resource))
-            {
-                if(!_freeResources.Contains(resource) && !_busyResources.Contains(resource))
-                {
+            {                
+                if (_freeResources.IndexOf(resource) == -1 && _busyResources.IndexOf(resource) == -1)
+                {                    
                     _freeResources.Add(resource);                                              
                 }                
             }           
         }
 
         if (_freeResources.Count > 0)
+        {            
             ResourceFounded?.Invoke();
+        }
+            
     }    
     
-    private IEnumerator PerformScan()
+    private IEnumerator PerformScan(WaitForSeconds wait)
     {
-        var wait = new WaitForSeconds(_repeatScanRate);
-        Scan();
-        yield return wait;        
+        while (true)
+        {            
+            Scan();
+            yield return wait;  
+        }              
     }
 }

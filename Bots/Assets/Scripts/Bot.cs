@@ -7,36 +7,35 @@ public class Bot : MonoBehaviour
     [SerializeField] private BotMover _botMover;
     [SerializeField] private BaseCollector _base;
        
-    private Resource _resource = null;
-    private float _duration = 2f;
+    private Resource _resource = null;    
+    private WaitForSeconds _wait;
 
     public event UnityAction CounterAdded;
 
-    public void CollectResource(Resource resource)
+    private void Awake()
+    {
+        _wait = new WaitForSeconds(_botMover.Duration);
+    }
+
+    public void SendForResource(Resource resource)
     {
         _botMover.Move(resource.transform.position);
         _resource = resource;
-        StartCoroutine(PerformTask());
+        
+        StartCoroutine(PerformTask(_wait));
     }      
 
-    private IEnumerator PerformTask()
-    {
-        var wait = new WaitForSeconds(_duration);
+    private IEnumerator PerformTask(WaitForSeconds wait)
+    {        
         yield return wait;
 
-        if (_resource != null)
-        {
-            _resource.transform.SetParent(transform);
-            _botMover.Move(_base.transform.position);
-        }        
+        _resource.transform.SetParent(transform);
+        _botMover.Move(_base.transform.position);        
 
         yield return wait;
 
-        if (_resource.transform.IsChildOf(transform))
-        {
-            _resource.transform.SetParent(null);
-            _resource = null;
-            CounterAdded?.Invoke();
-        }
+        _resource.transform.SetParent(null);
+        _resource = null;
+        CounterAdded?.Invoke();        
     }
     }

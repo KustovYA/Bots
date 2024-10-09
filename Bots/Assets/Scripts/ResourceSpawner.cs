@@ -15,6 +15,7 @@ public class ResourceSpawner : MonoBehaviour
     private float _positionZ = 15f;
     private float _positionY = 9f;
     private float _baseRadius = 5f;
+    private WaitForSeconds _wait;
 
     private void OnEnable()
     {
@@ -28,12 +29,13 @@ public class ResourceSpawner : MonoBehaviour
 
     private void Awake()
     {
-        _pool = new ObjectPool<Resource>(CreatePooledCube, OnTakeFromPool, OnReturnToPool, OnDestroyObject, false, _poolCapacity, _poolMaxSize); // создаем новый пул и добавляем в скрипт методы описывающие его
+        _wait = new WaitForSeconds(_repeatRate); 
+        _pool = new ObjectPool<Resource>(CreatePooledCube, OnTakeFromPool, OnReturnToPool, OnDestroyObject, false, _poolCapacity, _poolMaxSize);        
     }
 
     private void Start()
     {        
-        StartCoroutine(GetCubeRepeating());
+        StartCoroutine(GetCubeRepeating(_wait));
     }
 
     private void GetResource()
@@ -87,10 +89,8 @@ public class ResourceSpawner : MonoBehaviour
         return distance < _baseRadius;
     }
 
-    private IEnumerator GetCubeRepeating() 
-    {
-        var wait = new WaitForSeconds(_repeatRate);
-
+    private IEnumerator GetCubeRepeating(WaitForSeconds wait) 
+    {       
         while (true)
         {
             GetResource();

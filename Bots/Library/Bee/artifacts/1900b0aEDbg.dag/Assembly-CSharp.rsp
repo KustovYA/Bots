@@ -358,7 +358,7 @@
 "Assets/Scripts/BaseCollector.cs"
 "Assets/Scripts/Bot.cs"
 "Assets/Scripts/BotMover.cs"
-"Assets/Scripts/CounterShower.cs"
+"Assets/Scripts/CounterDemonstrator.cs"
 "Assets/Scripts/Resource.cs"
 "Assets/Scripts/ResourceCounter.cs"
 "Assets/Scripts/ResourceSpawner.cs"

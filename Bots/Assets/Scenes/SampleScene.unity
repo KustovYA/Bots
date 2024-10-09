@@ -1180,7 +1180,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b752f212940185f4b86e01bc3d5d2563, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _resource: {fileID: 6245142170944085077, guid: 2c76d12892488f649b8355973dd4808f, type: 3}
   _repeatScanRate: 1
   _scanRadius: 400
 --- !u!114 &1883736874
@@ -1222,11 +1221,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _scaner: {fileID: 1883736870}
-  _freeBot:
+  _freeBots:
   - {fileID: 1648521184}
   - {fileID: 951773063}
   - {fileID: 851561016}
-  _resourceSpawner: {fileID: 1883736865}
   _resourceCounter: {fileID: 1883736874}
 --- !u!1001 &2077172611
 PrefabInstance:
