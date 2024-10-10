@@ -1180,7 +1180,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b752f212940185f4b86e01bc3d5d2563, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _repeatScanRate: 1
+  _repeatScanRate: 0.1
   _scanRadius: 400
 --- !u!114 &1883736874
 MonoBehaviour:

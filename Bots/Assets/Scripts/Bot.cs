@@ -10,7 +10,7 @@ public class Bot : MonoBehaviour
     private Resource _resource = null;    
     private WaitForSeconds _wait;
 
-    public event UnityAction CounterAdded;
+    public event UnityAction CounterAdded;    
 
     private void Awake()
     {
@@ -36,6 +36,6 @@ public class Bot : MonoBehaviour
 
         _resource.transform.SetParent(null);
         _resource = null;
-        CounterAdded?.Invoke();        
+        CounterAdded?.Invoke();               
     }
     }

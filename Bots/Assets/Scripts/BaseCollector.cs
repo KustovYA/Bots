@@ -24,6 +24,7 @@ public class BaseCollector : MonoBehaviour
     private void OnEnable()
     {
         _scaner.ResourceFounded += SendBot;
+        
 
         foreach (Bot bot in _freeBots)
         {
@@ -37,9 +38,9 @@ public class BaseCollector : MonoBehaviour
 
         foreach (Bot bot in _freeBots)
         {
-            bot.CounterAdded -= _resourceCounter.AddCount;
+            bot.CounterAdded -= _resourceCounter.AddCount;           
         }
-    }   
+    }        
 
     public void SendBot()
     {        
@@ -47,6 +48,7 @@ public class BaseCollector : MonoBehaviour
         {            
             _currentBot = _freeBots[0];
             _currentResource = _scaner.GetResource();
+            print("Бот отправлен " + _currentBot);
 
             if (_currentResource != null)
             {
@@ -58,12 +60,11 @@ public class BaseCollector : MonoBehaviour
     }        
 
     private IEnumerator PerformTask(Bot currentBot, Resource currentResource, WaitForSeconds wait)
-    {       
+    {
         currentBot.SendForResource(currentResource);
-        
-        yield return wait;
 
+        yield return wait;
         _freeBots.Add(currentBot);
-        ResourceDelivered?.Invoke(currentResource);
+        ResourceDelivered?.Invoke(currentResource);        
     }
 }

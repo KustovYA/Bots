@@ -18,6 +18,6 @@ public class CounterDemonstrator : MonoBehaviour
 
     private void Display()
     {
-        _text.text = "Ресусов собрано: " + _counter.GetCount().ToString();
+        _text.text = "Ресусов собрано: " + _counter.Number.ToString();
     }        
 }

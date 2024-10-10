@@ -5,7 +5,7 @@ using UnityEngine.Events;
 
 public class Scaner: MonoBehaviour
 {    
-    [SerializeField] private float _repeatScanRate = 2f;
+    [SerializeField] private float _repeatScanRate = 1f;
     [SerializeField] private float _scanRadius = 400f;
 
     private List<Resource> _freeResources = new List<Resource>();
@@ -46,7 +46,7 @@ public class Scaner: MonoBehaviour
         {        
             if (scannedObject.TryGetComponent<Resource>(out Resource resource))
             {                
-                if (_freeResources.IndexOf(resource) == -1 && _busyResources.IndexOf(resource) == -1)
+                if(!_freeResources.Contains(resource) && !_busyResources.Contains(resource))
                 {                    
                     _freeResources.Add(resource);                                              
                 }                
@@ -56,8 +56,7 @@ public class Scaner: MonoBehaviour
         if (_freeResources.Count > 0)
         {            
             ResourceFounded?.Invoke();
-        }
-            
+        }            
     }    
     
     private IEnumerator PerformScan(WaitForSeconds wait)
