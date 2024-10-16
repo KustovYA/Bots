@@ -361,6 +361,7 @@
 "Assets/Scripts/CounterDemonstrator.cs"
 "Assets/Scripts/Resource.cs"
 "Assets/Scripts/ResourceCounter.cs"
+"Assets/Scripts/ResourceDataBase.cs"
 "Assets/Scripts/ResourceSpawner.cs"
 "Assets/Scripts/Scaner.cs"
 -langversion:9.0

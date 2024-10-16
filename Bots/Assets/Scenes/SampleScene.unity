@@ -1168,6 +1168,10 @@ MonoBehaviour:
   _poolCapacity: 10
   _poolMaxSize: 20
   _baseCollector: {fileID: 1883736886}
+  _freeBots:
+  - {fileID: 1648521184}
+  - {fileID: 951773063}
+  - {fileID: 851561016}
 --- !u!114 &1883736870
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1182,6 +1186,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _repeatScanRate: 0.1
   _scanRadius: 400
+  _resourceData: {fileID: 1883736887}
 --- !u!114 &1883736874
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1226,6 +1231,19 @@ MonoBehaviour:
   - {fileID: 951773063}
   - {fileID: 851561016}
   _resourceCounter: {fileID: 1883736874}
+  _resourceData: {fileID: 1883736887}
+--- !u!114 &1883736887
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1883736864}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 72e8c7b4b2d673f4b9d4077e44a4d044, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &2077172611
 PrefabInstance:
   m_ObjectHideFlags: 0

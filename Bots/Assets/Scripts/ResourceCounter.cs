@@ -1,9 +1,9 @@
 using UnityEngine;
-using UnityEngine.Events;
+using System;
 
 public class ResourceCounter : MonoBehaviour
 {         
-    public event UnityAction AmountRaised;
+    public event Action AmountRaised;
 
     public int Number { get; private set; } = 0;
     

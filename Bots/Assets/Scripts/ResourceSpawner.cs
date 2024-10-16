@@ -1,6 +1,7 @@
 using UnityEngine.Pool;
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class ResourceSpawner : MonoBehaviour
 {
@@ -9,6 +10,7 @@ public class ResourceSpawner : MonoBehaviour
     [SerializeField] private int _poolCapacity = 10;
     [SerializeField] private int _poolMaxSize = 50;
     [SerializeField] private BaseCollector _baseCollector;
+    [SerializeField] private List<Bot> _freeBots;
 
     private ObjectPool<Resource> _pool;
     private float _positionX = 30f;
@@ -16,27 +18,35 @@ public class ResourceSpawner : MonoBehaviour
     private float _positionY = 9f;
     private float _baseRadius = 5f;
     private WaitForSeconds _wait;
-
-    private void OnEnable()
-    {
-        _baseCollector.ResourceDelivered += ReturnCubeToPool;
-    }
-
-    private void OnDisable()
-    {
-        _baseCollector.ResourceDelivered -= ReturnCubeToPool;
-    }
+    private Vector3 _offset;
+    private float _distance;
 
     private void Awake()
     {
-        _wait = new WaitForSeconds(_repeatRate); 
-        _pool = new ObjectPool<Resource>(CreatePooledCube, OnTakeFromPool, OnReturnToPool, OnDestroyObject, false, _poolCapacity, _poolMaxSize);        
+        _wait = new WaitForSeconds(_repeatRate);
+        _pool = new ObjectPool<Resource>(CreatePooledCube, OnTakeFromPool, OnReturnToPool, OnDestroyObject, false, _poolCapacity, _poolMaxSize);
+    }
+
+    private void OnEnable()
+    {
+        foreach (Bot bot in _freeBots)
+        {
+            bot.ResourceDelivered += ReturnCubeToPool;
+        }
+    }
+
+    private void OnDisable()
+    {       
+        foreach (Bot bot in _freeBots)
+        {
+            bot.ResourceDelivered -= ReturnCubeToPool;
+        }
     }
 
     private void Start()
-    {        
+    {
         StartCoroutine(GetCubeRepeating(_wait));
-    }
+    }      
 
     private void GetResource()
     {
@@ -82,11 +92,10 @@ public class ResourceSpawner : MonoBehaviour
 
     private bool IsInCircle(Vector3 position)
     {
-        float centerX = 0f;
-        float centerZ = 0f;
+        _offset = position - transform.position;
+        _distance = _offset.sqrMagnitude;
 
-        float distance = Mathf.Sqrt(Mathf.Pow(position.x - centerX, 2) + Mathf.Pow(position.z - centerZ, 2));
-        return distance < _baseRadius;
+        return _distance < _baseRadius;        
     }
 
     private IEnumerator GetCubeRepeating(WaitForSeconds wait) 
