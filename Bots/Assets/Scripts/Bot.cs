@@ -6,11 +6,13 @@ public class Bot : MonoBehaviour
 {
     [SerializeField] private BotMover _botMover;
     [SerializeField] private BaseCollector _base;
-       
-    private Resource _resource = null;    
+
+    private Resource _resource = null;
     private WaitForSeconds _wait;
 
-    public event UnityAction CounterAdded;    
+    public event UnityAction CounterAdded;
+
+    public float Duration  => _botMover.Duration;
 
     private void Awake()
     {
@@ -29,12 +31,12 @@ public class Bot : MonoBehaviour
     {        
         yield return wait;
 
-        _resource.transform.SetParent(transform);
+        _resource?.transform.SetParent(transform);
         _botMover.Move(_base.transform.position);        
 
         yield return wait;
 
-        _resource.transform.SetParent(null);
+        _resource?.transform.SetParent(null);
         _resource = null;
         CounterAdded?.Invoke();               
     }

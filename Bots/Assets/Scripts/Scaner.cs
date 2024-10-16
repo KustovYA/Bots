@@ -5,7 +5,7 @@ using UnityEngine.Events;
 
 public class Scaner: MonoBehaviour
 {    
-    [SerializeField] private float _repeatScanRate = 1f;
+    [SerializeField] private float _repeatScanRate = 0.1f;
     [SerializeField] private float _scanRadius = 400f;
 
     private List<Resource> _freeResources = new List<Resource>();
@@ -36,7 +36,7 @@ public class Scaner: MonoBehaviour
     {
         _freeResources.Remove(currentResource);
         _busyResources.Add(currentResource);
-    }
+    }        
 
     private void Scan()
     {
