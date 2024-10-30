@@ -2,15 +2,15 @@ using UnityEngine.Pool;
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System;
+using Random = UnityEngine.Random;
 
 public class ResourceSpawner : MonoBehaviour
 {
     [SerializeField] private Resource _resource;
     [SerializeField] private float _repeatRate = 2f;
     [SerializeField] private int _poolCapacity = 10;
-    [SerializeField] private int _poolMaxSize = 50;
-    [SerializeField] private BaseCollector _baseCollector;
-    [SerializeField] private List<Bot> _freeBots;
+    [SerializeField] private int _poolMaxSize = 50;       
 
     private ObjectPool<Resource> _pool;
     private float _positionX = 30f;
@@ -21,27 +21,13 @@ public class ResourceSpawner : MonoBehaviour
     private Vector3 _offset;
     private float _distance;
 
+    public event Action<Resource> ResourceSpawned;
+
     private void Awake()
     {
         _wait = new WaitForSeconds(_repeatRate);
-        _pool = new ObjectPool<Resource>(CreatePooledCube, OnTakeFromPool, OnReturnToPool, OnDestroyObject, false, _poolCapacity, _poolMaxSize);
-    }
-
-    private void OnEnable()
-    {
-        foreach (Bot bot in _freeBots)
-        {
-            bot.ResourceDelivered += ReturnCubeToPool;
-        }
-    }
-
-    private void OnDisable()
-    {       
-        foreach (Bot bot in _freeBots)
-        {
-            bot.ResourceDelivered -= ReturnCubeToPool;
-        }
-    }
+        _pool = new ObjectPool<Resource>(CreatePooledCube, OnTakeFromPool, OnReturnToPool, OnDestroyObject, false, _poolCapacity, _poolMaxSize);        
+    }   
 
     private void Start()
     {
@@ -53,11 +39,11 @@ public class ResourceSpawner : MonoBehaviour
         _pool.Get();
     }
 
-    private void ReturnCubeToPool(Resource instance)
+    public void ReturnCubeToPool(Resource instance)
     {
         _pool.Release(instance);
     }
-
+    
     private Resource CreatePooledCube() 
     {
         Resource instance = Instantiate(_resource);       
@@ -78,6 +64,7 @@ public class ResourceSpawner : MonoBehaviour
 
         instance.transform.position = randomPosition;            
         instance.gameObject.SetActive(true);
+        ResourceSpawned?.Invoke(instance);
     }
 
     private void OnReturnToPool(Resource instance) 

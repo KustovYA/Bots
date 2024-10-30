@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class ResourceDataBase : MonoBehaviour
 {
+    [SerializeField] private ResourceSpawner _resourceSpawner;
+
     private List<Resource> _freeResources = new List<Resource>();
     private List<Resource> _busyResources = new List<Resource>();
     private WaitForSeconds _wait;
@@ -15,6 +17,16 @@ public class ResourceDataBase : MonoBehaviour
     private void Awake()
     {
         _wait = new WaitForSeconds(_repeatSendRate);
+    }
+
+    private void OnEnable()
+    {
+        _resourceSpawner.ResourceSpawned += ReturnToFreeResourcesList;
+    }
+
+    private void OnDisable()
+    {
+        _resourceSpawner.ResourceSpawned -= ReturnToFreeResourcesList;
     }
 
     private void Start()
@@ -34,6 +46,15 @@ public class ResourceDataBase : MonoBehaviour
     {
         _freeResources.Remove(currentResource);
         _busyResources.Add(currentResource);
+    }
+
+    public void ReturnToFreeResourcesList(Resource currentResource)
+    {
+        if (_busyResources.Contains(currentResource))
+        {
+            _busyResources.Remove(currentResource);
+            _freeResources.Add(currentResource);
+        }        
     }
 
     public void AddResource(Resource resource)
