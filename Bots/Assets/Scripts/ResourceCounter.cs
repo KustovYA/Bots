@@ -1,6 +1,5 @@
 using UnityEngine;
 using System;
-using Unity.VisualScripting;
 
 public class ResourceCounter : MonoBehaviour
 {
@@ -22,6 +21,7 @@ public class ResourceCounter : MonoBehaviour
         if (Number >= 3)
         {
             ResourceAccumulated?.Invoke();
+            print("Ресурсы собраны");
         }
 
         AmountChanged?.Invoke();

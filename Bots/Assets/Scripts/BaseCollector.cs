@@ -1,8 +1,6 @@
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.UIElements;
-using static Unity.IO.LowLevel.Unsafe.AsyncReadManagerMetrics;
+
 
 public class BaseCollector : MonoBehaviour
 {
@@ -129,13 +127,20 @@ public class BaseCollector : MonoBehaviour
     private void CreateObject()
     {
         print(_isFlagPut);
+        print(_resourceCounter.Number);
         if (_isFlagPut && _resourceCounter.Number >= 5)
-        {            
+        {
+            print("Создаем базу");
             CreateBase();
         }
         else if (!_isFlagPut && _resourceCounter.Number >= 3)
         {
+            print("Создаем бота");
             CreateBot();
+        }
+        else
+        {
+            Debug.Log("Недостаточно ресурсов для создания.");
         }
     }
 
@@ -152,12 +157,15 @@ public class BaseCollector : MonoBehaviour
 
     private void CreateBase()
     {
+        _resourceData.ResourceFounded -= SendBot;
+
         if (_freeBots.Count > 0)
         {
             Bot botBuilder = _freeBots[0];
             _freeBots.Remove(botBuilder);
             botBuilder.BuildBase(_flag);
             _resourceCounter.RemoveCountForCreateBase();
+            _resourceData.ResourceFounded += SendBot;
         }
     }
 
