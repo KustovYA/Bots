@@ -3,6 +3,8 @@ using System;
 
 public class ResourceCounter : MonoBehaviour
 {
+    [SerializeField] private BaseCollector _base;
+
     public event Action AmountChanged;
     public event Action ResourceAccumulated;
 
@@ -18,10 +20,9 @@ public class ResourceCounter : MonoBehaviour
     {
         Number++;        
 
-        if (Number >= 3)
+        if (_base.IsResourceEnough())
         {
-            ResourceAccumulated?.Invoke();
-            print("Ресурсы собраны");
+            ResourceAccumulated?.Invoke();            
         }
 
         AmountChanged?.Invoke();

@@ -1,6 +1,7 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using System;
 
 public class BaseCollector : MonoBehaviour
 {
@@ -17,34 +18,42 @@ public class BaseCollector : MonoBehaviour
     private Bot _currentBot = null;     
     private bool _isFlagReady = false;
     private bool _isFlagPut = false;
-    private Flag _flag;        
+    private Flag _flag;
+    private float _repeatSendRate = 0.1f;
+    private WaitForSeconds _wait;
+    private int _resourcesForBuy = 3;    
 
+    public event Action ResourceIsInDataBase;        
+    public event Action CounterAdded;
+        
     private void OnEnable()
-    {        
-        _resourceData.ResourceFounded += SendBot;
+    {               
         _resourceCounter.ResourceAccumulated += CreateObject;
         _allocationPrefab.SetActive(false);        
 
         foreach (Bot bot in _freeBots)
-        {
-            bot.CounterAdded += _resourceCounter.AddCount;
+        {            
             bot.BotReleased += FreeBot;
         }
     }
 
     private void OnDisable()
-    {
-        _resourceData.ResourceFounded -= SendBot;
+    {        
         _resourceCounter.ResourceAccumulated -= CreateObject;
 
         foreach (Bot bot in _freeBots)
-        {
-            bot.CounterAdded -= _resourceCounter.AddCount;
+        {            
             bot.BotReleased -= FreeBot;
         }
     }
 
-    void Update()
+    private void Start()
+    {
+        _wait = new WaitForSeconds(_repeatSendRate);
+        StartCoroutine(SendForResource(_wait));
+    }
+
+    private void Update()
     {
         if (Input.GetMouseButtonDown(1)) 
         {            
@@ -68,8 +77,65 @@ public class BaseCollector : MonoBehaviour
             }
         }
     }
+    private void OnMouseDown()
+    {
+        if (_isFlagReady)
+        {
+            _isFlagReady = false;
+        }
+        else
+        {
+            _isFlagReady = true;
+        }
 
-    public void SendBot()
+        _allocationPrefab.SetActive(_isFlagReady);
+    }
+
+    public void FreeBot(Bot currentBot)
+    {
+        _freeBots.Add(currentBot);
+    }
+
+    public void RemoveBot(Bot currentBot)
+    {
+        _freeBots.Remove(currentBot);
+    }
+    
+
+    public bool IsResourceEnough()
+    {
+        return _resourceCounter.Number >= _resourcesForBuy;
+    }
+
+    public void RemoveFlag()
+    {
+        _isFlagPut = false;
+
+        if (_flag != null)
+            Destroy(_flag.gameObject);
+    }
+
+    public void ReturnResource(Resource resource)
+    {
+        _resourceSpawner.ReturnCubeToPool(resource);
+        _resourceCounter.AddCount();
+        CounterAdded?.Invoke();
+    }
+
+    private IEnumerator SendForResource(WaitForSeconds wait)
+    {
+        while (true)
+        {
+            if (_resourceData.IsResourceFree())
+            {
+                SendBot();
+            }
+
+            yield return wait;
+        }
+    }
+
+    private void SendBot()
     {
         if (_freeBots.Count > 0)
         {
@@ -85,97 +151,53 @@ public class BaseCollector : MonoBehaviour
         }
     }
 
-    public bool IsFlagReady()
+    private bool IsFlagReady()
     {        
         return _isFlagReady;
     }
 
-    public bool IsFlagPut()
+    private bool IsFlagPut()
     {
         return _isFlagPut;
     }
 
-    public Flag CreateFlag(Vector3 clickPosition)
+    private Flag CreateFlag(Vector3 clickPosition)
     {
         _flag = Instantiate(_flagPrefab, clickPosition, Quaternion.identity);
         _isFlagPut = true;        
         return _flag;
-    }
-
-    public void RemoveFlag()
-    {
-        _isFlagPut = false; 
-
-        if (_flag != null)
-            Destroy(_flag.gameObject);        
-    }
-
-    private void OnMouseDown()
-    {
-        if (_isFlagReady)
-        {
-            _isFlagReady = false;            
-        }
-        else
-        {
-            _isFlagReady = true;
-        }
-
-        _allocationPrefab.SetActive(_isFlagReady);
-    }
+    }     
+       
     
     private void CreateObject()
     {
-        print(_isFlagPut);
-        print(_resourceCounter.Number);
         if (_isFlagPut && _resourceCounter.Number >= 5)
-        {
-            print("Создаем базу");
+        {            
             CreateBase();
         }
         else if (!_isFlagPut && _resourceCounter.Number >= 3)
-        {
-            print("Создаем бота");
+        {            
             CreateBot();
-        }
-        else
-        {
-            Debug.Log("Недостаточно ресурсов для создания.");
-        }
+        }        
     }
 
     private void CreateBot()
     {        
         Bot bot = Instantiate(_botPrefab, transform.position, UnityEngine.Quaternion.identity);
-        bot.GetBaseCollector(this);
-        bot.GetResourceSpawner(_resourceSpawner);
-        bot.CounterAdded += _resourceCounter.AddCount;
+        bot.AssignBaseCollector(this);           
         bot.BotReleased += FreeBot;        
         _freeBots.Add(bot);        
         _resourceCounter.RemoveCountForCreateBot();
     }    
 
     private void CreateBase()
-    {
-        _resourceData.ResourceFounded -= SendBot;
-
+    {       
         if (_freeBots.Count > 0)
         {
             Bot botBuilder = _freeBots[0];
             _freeBots.Remove(botBuilder);
-            botBuilder.BuildBase(_flag);
-            _resourceCounter.RemoveCountForCreateBase();
-            _resourceData.ResourceFounded += SendBot;
+            botBuilder.SentToNewBasePosition(_flag);
+            _resourceCounter.RemoveCountForCreateBase();            
         }
-    }
-
-    public void FreeBot(Bot currentBot) 
-    {
-        _freeBots.Add(currentBot);
-    }
-
-    public void RemoveBot(Bot currentBot)
-    {
-        _freeBots.Remove(currentBot);
-    }
+    }    
 }

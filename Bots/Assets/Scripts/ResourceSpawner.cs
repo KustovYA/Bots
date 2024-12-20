@@ -15,18 +15,16 @@ public class ResourceSpawner : MonoBehaviour
     private ObjectPool<Resource> _pool;
     private float _positionX = 30f;
     private float _positionZ = 15f;
-    private float _positionY = 9f;
-    private float _baseRadius = 5f;
+    private float _positionY = 9f;    
     private WaitForSeconds _wait;
     private Vector3 _offset;
-    private float _distance;
-
+    
     public event Action<Resource> ResourceSpawned;
 
     private void Awake()
     {
         _wait = new WaitForSeconds(_repeatRate);
-        _pool = new ObjectPool<Resource>(CreatePooledCube, OnTakeFromPool, OnReturnToPool, OnDestroyObject, false, _poolCapacity, _poolMaxSize);        
+        _pool = new ObjectPool<Resource>(CreatePooledItem, OnTakeFromPool, OnReturnToPool, OnDestroyObject, false, _poolCapacity, _poolMaxSize);        
     }   
 
     private void Start()
@@ -44,7 +42,7 @@ public class ResourceSpawner : MonoBehaviour
         _pool.Release(instance);
     }
     
-    private Resource CreatePooledCube() 
+    private Resource CreatePooledItem() 
     {
         Resource instance = Instantiate(_resource);       
         instance.gameObject.SetActive(false);
@@ -53,16 +51,9 @@ public class ResourceSpawner : MonoBehaviour
     }
 
     private void OnTakeFromPool(Resource instance) 
-    {
-        Vector3 randomPosition;
-
-        do
-        {
-            randomPosition = new Vector3(Random.Range(-_positionX, _positionX), _positionY, Random.Range(-_positionZ, _positionZ));
-        }
-        while (IsInCircle(randomPosition));
-
-        instance.transform.position = randomPosition;            
+    {        
+        Vector3 randomPosition = new Vector3(Random.Range(-_positionX, _positionX), _positionY, Random.Range(-_positionZ, _positionZ));
+        instance.transform.position = randomPosition + _offset;            
         instance.gameObject.SetActive(true);
         ResourceSpawned?.Invoke(instance);
     }
@@ -75,15 +66,7 @@ public class ResourceSpawner : MonoBehaviour
     private void OnDestroyObject(Resource instance) 
     {
         Destroy(instance.gameObject);
-    }
-
-    private bool IsInCircle(Vector3 position)
-    {
-        _offset = position - transform.position;
-        _distance = _offset.sqrMagnitude;
-
-        return _distance < _baseRadius;        
-    }
+    }   
 
     private IEnumerator GetCubeRepeating(WaitForSeconds wait) 
     {       

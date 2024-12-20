@@ -1,23 +1,33 @@
 using UnityEngine;
+using System.Collections;
 
 public class BotMover : MonoBehaviour
 {
-    private float _speed = 10f;
+    private float _speed = 50f;
     private Vector3 _target;
-   
+    private float _repeatRate = 0.01f;
+    private WaitForSeconds _wait;    
+
     private void Start()
     {
         _target = transform.position;
     }
-
-    private void Update()
+    
+    public void MoveToTarget(Vector3 resource)
     {
-        transform.LookAt(_target);
-        transform.position = Vector3.MoveTowards(transform.position, _target, _speed * Time.deltaTime);
+        StopAllCoroutines();
+        _target = resource;
+        _wait = new WaitForSeconds(_repeatRate);
+        StartCoroutine(Move(_wait));
     }
 
-    public void Move(Vector3 resource)
+    private IEnumerator Move(WaitForSeconds wait)
     {
-        _target = resource;
-    }    
+        while (true)
+        {
+            transform.LookAt(_target);
+            transform.position = Vector3.MoveTowards(transform.position, _target, _speed * Time.deltaTime);
+            yield return wait;
+        }
+    }
 }

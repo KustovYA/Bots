@@ -4,14 +4,15 @@ using UnityEngine;
 public class CounterViewer : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI _text;
-    [SerializeField] private ResourceCounter _counter;    
+    [SerializeField] private ResourceCounter _counter;
+    [SerializeField] private BaseCollector _base;
 
     private Vector3 _offset = new Vector3(4, 0, 2.5f);
 
     private void OnEnable()
     {
         _counter.AmountChanged += Display;
-        RectTransform rectTransform = _text.rectTransform;
+        RectTransform rectTransform = _text.rectTransform;        
         rectTransform.anchoredPosition = Camera.main.WorldToScreenPoint(_counter.transform.position + _offset);
     }
 

@@ -1,6 +1,4 @@
-using System.Collections;
 using System.Collections.Generic;
-using System;
 using UnityEngine;
 
 public class ResourceDataBase : MonoBehaviour
@@ -8,16 +6,7 @@ public class ResourceDataBase : MonoBehaviour
     [SerializeField] private ResourceSpawner _resourceSpawner;
 
     private List<Resource> _freeResources = new List<Resource>();
-    private List<Resource> _busyResources = new List<Resource>();
-    private WaitForSeconds _wait;
-    private float _repeatSendRate = 0.1f;
-
-    public event Action ResourceFounded;
-
-    private void Awake()
-    {
-        _wait = new WaitForSeconds(_repeatSendRate);
-    }
+    private List<Resource> _busyResources = new List<Resource>();   
 
     private void OnEnable()
     {
@@ -27,12 +16,7 @@ public class ResourceDataBase : MonoBehaviour
     private void OnDisable()
     {
         _resourceSpawner.ResourceSpawned -= ReturnToFreeResourcesList;
-    }
-
-    private void Start()
-    {
-        StartCoroutine(SendForResource(_wait));
-    }
+    }       
 
     public Resource GetResource()
     {
@@ -65,17 +49,8 @@ public class ResourceDataBase : MonoBehaviour
         }
     }
 
-    private IEnumerator SendForResource(WaitForSeconds wait)
+    public bool IsResourceFree()
     {
-        while (true)
-        {
-            if (_freeResources.Count > 0)
-            {
-                ResourceFounded?.Invoke();
-            }
-
-            yield return wait;
-        }
-    }
-
+        return _freeResources.Count > 0;
+    }   
 }
