@@ -922,13 +922,12 @@ MonoBehaviour:
   _resourceCounter: {fileID: 1883736874}
   _resourceData: {fileID: 1883736887}
   _botPrefab: {fileID: 5647552872747479248, guid: 7222d0f242dcc4c40b5e43300432c289, type: 3}
-  _flagPrefab: {fileID: 1594850102370227918, guid: 64769eb3a9c28604bac34ce04f5d9c63, type: 3}
-  _allocationPrefab: {fileID: 1687663358}
   _freeBots:
   - {fileID: 1232994526}
   - {fileID: 1188999523}
   - {fileID: 333730511}
   _resourceSpawner: {fileID: 1577730164}
+  _flagCreator: {fileID: 1883736898}
 --- !u!114 &1883736887
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -947,6 +946,20 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4064334960189254, guid: 71497ec4178769a4c8cdb38563f01fc0, type: 3}
   m_PrefabInstance: {fileID: 1821731233}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1883736898
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1883736864}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 253e7401093738d44810f6a5f23b1a03, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _allocationPrefab: {fileID: 1687663358}
+  _flagPrefab: {fileID: 1594850102370227918, guid: 64769eb3a9c28604bac34ce04f5d9c63, type: 3}
 --- !u!1001 &2000620459
 PrefabInstance:
   m_ObjectHideFlags: 0

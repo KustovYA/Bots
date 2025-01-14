@@ -4,14 +4,14 @@ using UnityEngine;
 public class Bot : MonoBehaviour
 {
     [SerializeField] private BotMover _botMover;
-    [SerializeField] private BaseCollector _base;    
+    [SerializeField] private Base _base;    
 
     private Resource _resource = null;
     private bool _isBuilder = false;
         
     public event Action<Bot> BotReleased;    
 
-    public void AssignBaseCollector(BaseCollector baseCollector)
+    public void AssignBaseCollector(Base baseCollector)
     {        
         _base = baseCollector;
     }   
@@ -36,7 +36,7 @@ public class Bot : MonoBehaviour
             _botMover.MoveToTarget(_base.transform.position);
         }
 
-        if (other.GetComponent<BaseCollector>() == _base && _resource != null)
+        if (other.GetComponent<Base>() == _base && _resource != null)
         {
             _resource?.transform.SetParent(null); 
             _base.ReturnResource(_resource);                       
@@ -46,7 +46,7 @@ public class Bot : MonoBehaviour
         if(other.GetComponent<Flag>() && _isBuilder)
         {
             _base.RemoveBot(this);
-            BaseCollector newBase = Instantiate(_base, transform.position, UnityEngine.Quaternion.identity);              
+            Base newBase = Instantiate(_base, transform.position, UnityEngine.Quaternion.identity);              
             _base.RemoveFlag();
             AssignBaseCollector(newBase);             
             _isBuilder = false;

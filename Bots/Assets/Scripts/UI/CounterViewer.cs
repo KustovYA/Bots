@@ -5,7 +5,7 @@ public class CounterViewer : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI _text;
     [SerializeField] private ResourceCounter _counter;
-    [SerializeField] private BaseCollector _base;
+    [SerializeField] private Base _base;
 
     private Vector3 _offset = new Vector3(4, 0, 2.5f);
 
