@@ -432,7 +432,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _botMover: {fileID: 5647552872747479277}
-  _base: {fileID: 0}
+  _base: {fileID: 945968164704580706, guid: f82fe731445f4024988a9d48c4f85951, type: 3}
 --- !u!1 &5649080942725430593
 GameObject:
   m_ObjectHideFlags: 0

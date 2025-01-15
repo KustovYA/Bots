@@ -23,7 +23,7 @@ public class Base : MonoBehaviour
         
     private void OnEnable()
     {               
-        _resourceCounter.ResourceAccumulated += MakeBaseOrBot;               
+        _resourceCounter.ResourceAccumulated += CreateBaseOrBot;               
 
         foreach (Bot bot in _freeBots)
         {            
@@ -33,7 +33,7 @@ public class Base : MonoBehaviour
 
     private void OnDisable()
     {        
-        _resourceCounter.ResourceAccumulated -= MakeBaseOrBot;
+        _resourceCounter.ResourceAccumulated -= CreateBaseOrBot;
 
         foreach (Bot bot in _freeBots)
         {            
@@ -103,19 +103,19 @@ public class Base : MonoBehaviour
         }
     }
     
-    private void MakeBaseOrBot()
+    private void CreateBaseOrBot()
     {
         if (_flagCreator.IsFlagPut() && _resourceCounter.Number >= 5)
         {            
-            MakeNewBase();
+            CreateBase();
         }
         else if (!_flagCreator.IsFlagPut() && _resourceCounter.Number >= 3)
         {
-            MakeNewBot();
+            CreateBot();
         }        
     }
 
-    private void MakeNewBot()
+    private void CreateBot()
     {        
         Bot bot = Instantiate(_botPrefab, transform.position, UnityEngine.Quaternion.identity);
         bot.AssignBaseCollector(this);           
@@ -124,7 +124,7 @@ public class Base : MonoBehaviour
         _resourceCounter.RemoveCountForMakingNewBot();
     }    
 
-    private void MakeNewBase()
+    private void CreateBase()
     {       
         if (_freeBots.Count > 0)
         {
