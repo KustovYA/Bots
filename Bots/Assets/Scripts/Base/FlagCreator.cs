@@ -15,34 +15,31 @@ public class FlagCreator : MonoBehaviour
     private void OnEnable()
     {        
         _allocationPrefab.SetActive(false);        
-    }
+    }       
 
-    private void Update()
+    public void CreateFlagAtPoint()
     {
-        if (Input.GetMouseButtonDown(1))
-        {
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            RaycastHit hit;
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        RaycastHit hit;
 
-            if (Physics.Raycast(ray, out hit))
+        if (Physics.Raycast(ray, out hit))
+        {
+            if (hit.collider != null && hit.collider.GetComponent<Collider>() != null)
             {
-                if (hit.collider != null && hit.collider.GetComponent<Collider>() != null)
+                if (IsFlagReady() && !IsFlagPut())
                 {
-                    if (IsFlagReady() && !IsFlagPut())
-                    {
-                        _flag = CreateFlag(hit.point);
-                    }
-                    else if (IsFlagReady() && IsFlagPut())
-                    {
-                        RemoveFlag();
-                        _flag = CreateFlag(hit.point);
-                    }
+                    _flag = CreateFlag(hit.point);
+                }
+                else if (IsFlagReady() && IsFlagPut())
+                {
+                    RemoveFlag();
+                    _flag = CreateFlag(hit.point);
                 }
             }
         }
     }
 
-    private void OnMouseDown()
+    public void AllocateFlag()
     {
         if (_isFlagReady)
         {
@@ -74,7 +71,7 @@ public class FlagCreator : MonoBehaviour
         return _flag;
     }
 
-    private bool IsFlagReady()
+    public bool IsFlagReady()
     {
         return _isFlagReady;
     }       

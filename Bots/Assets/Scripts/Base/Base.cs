@@ -2,13 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using UnityEngine.UIElements;
 
 public class Base : MonoBehaviour
 {
     [SerializeField] private Scaner _scaner;
     [SerializeField] private ResourceCounter _resourceCounter;
-    [SerializeField] private ResourceDataBase _resourceData;
-    [SerializeField] private Bot _botPrefab;   
+    [SerializeField] private ResourceDataBase _resourceData;    
     [SerializeField] private List<Bot> _freeBots = new List<Bot>();
     [SerializeField] private ResourceSpawner _resourceSpawner;
     [SerializeField] private FlagCreator _flagCreator;
@@ -22,9 +22,7 @@ public class Base : MonoBehaviour
     public event Action CounterAdded;
         
     private void OnEnable()
-    {               
-        _resourceCounter.ResourceAccumulated += CreateBaseOrBot;               
-
+    {        
         foreach (Bot bot in _freeBots)
         {            
             bot.BotReleased += FreeBot;
@@ -32,9 +30,7 @@ public class Base : MonoBehaviour
     }
 
     private void OnDisable()
-    {        
-        _resourceCounter.ResourceAccumulated -= CreateBaseOrBot;
-
+    {      
         foreach (Bot bot in _freeBots)
         {            
             bot.BotReleased -= FreeBot;
@@ -72,11 +68,21 @@ public class Base : MonoBehaviour
         _resourceSpawner.ReturnCubeToPool(resource);
         _resourceCounter.AddCount();
         CounterAdded?.Invoke();
+    }      
+
+    public bool IsFreeBot()
+    {
+        return _freeBots.Count > 0;
+    }
+
+    public Bot GetBotBuilder()
+    {
+        return _freeBots[0];
     }
 
     private IEnumerator SendForResource(WaitForSeconds wait)
     {
-        while (true)
+        while (enabled)
         {
             if (_resourceData.IsResourceFree())
             {
@@ -100,38 +106,6 @@ public class Base : MonoBehaviour
                 _resourceData.RemoveResourceFromList(_currentResource);
                 _currentBot.SendForResource(_currentResource);                
             }
-        }
-    }
-    
-    private void CreateBaseOrBot()
-    {
-        if (_flagCreator.IsFlagPut() && _resourceCounter.Number >= 5)
-        {            
-            CreateBase();
-        }
-        else if (!_flagCreator.IsFlagPut() && _resourceCounter.Number >= 3)
-        {
-            CreateBot();
-        }        
-    }
-
-    private void CreateBot()
-    {        
-        Bot bot = Instantiate(_botPrefab, transform.position, UnityEngine.Quaternion.identity);
-        bot.AssignBaseCollector(this);           
-        bot.BotReleased += FreeBot;        
-        _freeBots.Add(bot);        
-        _resourceCounter.RemoveCountForMakingNewBot();
-    }    
-
-    private void CreateBase()
-    {       
-        if (_freeBots.Count > 0)
-        {
-            Bot botBuilder = _freeBots[0];
-            _freeBots.Remove(botBuilder);
-            botBuilder.SentToNewBasePosition(_flagCreator.CurrentFlag());
-            _resourceCounter.RemoveCountForMakingNewBase();            
         }
     }    
 }

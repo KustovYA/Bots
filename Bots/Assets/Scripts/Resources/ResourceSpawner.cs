@@ -70,7 +70,7 @@ public class ResourceSpawner : MonoBehaviour
 
     private IEnumerator GetCubeRepeating(WaitForSeconds wait) 
     {       
-        while (true)
+        while (enabled)
         {
             GetResource();
             yield return wait;

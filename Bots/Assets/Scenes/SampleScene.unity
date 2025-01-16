@@ -923,6 +923,8 @@ GameObject:
   - component: {fileID: 1883736886}
   - component: {fileID: 1883736887}
   - component: {fileID: 1883736901}
+  - component: {fileID: 1883736902}
+  - component: {fileID: 1883736903}
   m_Layer: 0
   m_Name: Base
   m_TagString: Untagged
@@ -987,7 +989,6 @@ MonoBehaviour:
   _scaner: {fileID: 1883736870}
   _resourceCounter: {fileID: 1883736874}
   _resourceData: {fileID: 1883736887}
-  _botPrefab: {fileID: 5647552872747479248, guid: 7222d0f242dcc4c40b5e43300432c289, type: 3}
   _freeBots:
   - {fileID: 1232994526}
   - {fileID: 1188999523}
@@ -1088,6 +1089,35 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _allocationPrefab: {fileID: 1687663358}
   _flagPrefab: {fileID: 1594850102370227918, guid: 64769eb3a9c28604bac34ce04f5d9c63, type: 3}
+--- !u!114 &1883736902
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1883736864}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2bfa21e99d7424041a8878a53d3ed7e5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _resourceCounter: {fileID: 1883736874}
+  _flagCreator: {fileID: 1883736901}
+  _botPrefab: {fileID: 333730511}
+  _base: {fileID: 1883736886}
+--- !u!114 &1883736903
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1883736864}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7df105ed5b157be459ee0b5903d4c05f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _flagCreator: {fileID: 1883736901}
 --- !u!1001 &2000620459
 PrefabInstance:
   m_ObjectHideFlags: 0

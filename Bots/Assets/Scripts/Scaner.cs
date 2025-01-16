@@ -34,7 +34,7 @@ public class Scaner: MonoBehaviour
     
     private IEnumerator PerformScan(WaitForSeconds wait)
     {
-        while (true)
+        while (enabled)
         {            
             Scan();
             yield return wait;  

@@ -360,6 +360,8 @@
 "Assets/Scripts/Base/Base.cs"
 "Assets/Scripts/Base/Flag.cs"
 "Assets/Scripts/Base/FlagCreator.cs"
+"Assets/Scripts/Base/InputReader.cs"
+"Assets/Scripts/Base/ObjectCreator.cs"
 "Assets/Scripts/Bot/Bot.cs"
 "Assets/Scripts/Bot/BotMover.cs"
 "Assets/Scripts/Ground.cs"
