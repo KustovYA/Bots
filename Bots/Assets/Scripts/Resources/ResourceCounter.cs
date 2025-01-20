@@ -5,8 +5,8 @@ public class ResourceCounter : MonoBehaviour
 {
     [SerializeField] private Base _base;
 
-    private int _botPrice = 3;
-    private int _basePrice = 5;
+    public int BotPrice => 3;
+    public int BasePrice => 5;
 
     public event Action AmountChanged;
     public event Action ResourceAccumulated;
@@ -33,13 +33,13 @@ public class ResourceCounter : MonoBehaviour
 
     public void RemoveCountForMakingNewBot()
     {
-        Number -= _botPrice;
+        Number -= BotPrice;
         AmountChanged?.Invoke();
     }
 
     public void RemoveCountForMakingNewBase()
     {
-        Number -= _basePrice;
+        Number -= BasePrice;
         AmountChanged?.Invoke();
     }
 }

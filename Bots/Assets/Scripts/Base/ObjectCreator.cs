@@ -1,6 +1,4 @@
-using DG.Tweening;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class ObjectCreator : MonoBehaviour
@@ -10,23 +8,35 @@ public class ObjectCreator : MonoBehaviour
     [SerializeField] private Bot _botPrefab;
     [SerializeField] private Base _base;
 
-    private void OnEnable()
-    {
-        _resourceCounter.ResourceAccumulated += CreateObject;       
-    }
+    private float _repeatRate = 0.01f;
+    private WaitForSeconds _wait;
+    private Coroutine CreateCourutine;   
 
-    private void OnDisable()
+    private void Start()
     {
-        _resourceCounter.ResourceAccumulated -= CreateObject;
+        if (CreateCourutine != null)
+            StopCoroutine(CreateCourutine);
+
+        _wait = new WaitForSeconds(_repeatRate);
+        CreateCourutine = StartCoroutine(Move(_wait));
+    }   
+
+    private IEnumerator Move(WaitForSeconds wait)
+    {
+    while (enabled)
+    {
+        CreateObject();
+        yield return wait;
+    }
     }
 
     private void CreateObject()
     {
-        if (_flagCreator.IsFlagPut() && _resourceCounter.Number >= 5)
+        if (_flagCreator.IsFlagPut() && _resourceCounter.Number >= _resourceCounter.BasePrice)
         {
             CreateBase();
         }
-        else if (_flagCreator.IsFlagPut() == false && _resourceCounter.Number >= 3)
+        else if (_flagCreator.IsFlagPut() == false && _resourceCounter.Number >= _resourceCounter.BotPrice)
         {
             CreateBot();
         }
